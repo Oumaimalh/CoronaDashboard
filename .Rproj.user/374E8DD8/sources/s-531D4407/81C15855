@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1585603236525.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "81C15855",
+    "lastKnownWriteTime" : 2786855837336,
+    "last_content_update" : 1585603236525,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "9013C3D6",
+        "caption" : "df_confirmed_province",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=df_confirmed_province&cache_key=9013C3D6",
+        "displayedObservations" : 501,
+        "environment" : "",
+        "expression" : "df_confirmed_province",
+        "object" : "df_confirmed_province",
+        "preview" : 0,
+        "totalObservations" : 501,
+        "variables" : 66
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 25,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

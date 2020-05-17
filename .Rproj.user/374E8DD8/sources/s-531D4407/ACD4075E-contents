@@ -1,0 +1,18 @@
+library(shiny)
+library(shinydashboard)
+library(leaflet)
+shinyUI(
+    dashboardPage(skin="red",
+        dashboardHeader(title="Corona virus "),
+        dashboardSidebar(
+         
+            sidebarMenu(    menuItem("Corona virus in the world", tabName = "Corona", icon = icon("dashboard")),    menuItem("in Tunisia", icon = icon("send",lib='glyphicon'),              href = "https://www.salesforce.com")  )
+        ),
+        dashboardBody(tabItems(tabItem(tabName = "Corona",fluidRow(
+            valueBoxOutput("value1")
+            ,valueBoxOutput("value2")
+            ,valueBoxOutput("value3")
+        ))))
+    )
+    
+)

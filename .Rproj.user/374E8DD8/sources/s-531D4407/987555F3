@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1585508571389.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "987555F3",
+    "lastKnownWriteTime" : 1585586584,
+    "last_content_update" : 1585586584516,
+    "path" : "C:/Users/asus/Downloads/server (3).r",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "4,8",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 11,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1585603150839.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "806F196F",
+    "lastKnownWriteTime" : 13511005043687472,
+    "last_content_update" : 1585603150839,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "E79127DA",
+        "caption" : "world2",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=world2&cache_key=E79127DA",
+        "displayedObservations" : 9735,
+        "environment" : "",
+        "expression" : "world2",
+        "object" : "world2",
+        "preview" : 0,
+        "totalObservations" : 9735,
+        "variables" : 8
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 17,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

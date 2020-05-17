@@ -1,0 +1,8 @@
+"0",""
+"0","df4<-data.frame(nom,date)"
+"0","date_num<-vector(""numeric"",nrow(df4))"
+"0","for (i in 1:nrow(df4)){"
+"0","  date_num[i]<- time_length(interval(start = ymd(df4[i,2]), end = today()), unit = ""days"") "
+"0","}"
+"0",""
+"0","df4<-data.frame(df4,date_num)"

@@ -1,0 +1,1 @@
+"0","df_latong=merge(world,df_confirmed,by=""Country.Region"")[,c(1,3,6,10,11)]"

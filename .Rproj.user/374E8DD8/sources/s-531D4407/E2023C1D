@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1585930229797.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "E2023C1D",
+    "lastKnownWriteTime" : 1869465098896,
+    "last_content_update" : 1585930229797,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "F987DBB3",
+        "caption" : "prediction",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=prediction&cache_key=F987DBB3",
+        "displayedObservations" : 32,
+        "environment" : "",
+        "expression" : "prediction",
+        "object" : "prediction",
+        "preview" : 0,
+        "totalObservations" : 32,
+        "variables" : 5
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

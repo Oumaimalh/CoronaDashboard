@@ -1,0 +1,2 @@
+"0",""
+"0","world=read.csv(""https://docs.google.com/spreadsheets/d/e/2PACX-1vTlnogupswk1FW2T00LzzoPsx7e0BoYFgougFreXbFjfCxENGIA4txYnPZZpkGA2T80XcqC7j-A7fNC/pub?gid=791034843&single=true&output=csv"",header = TRUE, sep= "";"") "

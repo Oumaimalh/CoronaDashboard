@@ -1,0 +1,58 @@
+library(shiny)
+library(shinydashboard)
+library(leaflet)
+library(DT)
+
+library(ggplot2)
+library(gridExtra)
+library(leaflet)
+library(shiny)
+library(shinydashboard)
+
+library(data.table)
+library(dplyr)
+library(tidyr)
+library(scales)
+library(forcats)
+library(grid)
+library(shiny)
+library(shinydashboard)
+library(leaflet)
+library(tidyverse)
+library(flexdashboard)
+library(ggplot2)
+Tunisia <- read.csv("C:/Users/asus/Desktop/houcine/Tunisia.csv", sep=";")
+data <- read.csv("C:/Users/asus/Desktop/houcine/application/Coronavirus.csv", sep=";")
+
+shinyUI(
+  dashboardPage(skin="red",
+                dashboardHeader(title="Corona virus "),
+                dashboardSidebar(
+                  
+                  sidebarMenu(    menuItem("Corona virus in the world" ,icon = icon("dashboard"),
+                                           menuSubItem("statistics",tabName = "Corona2" )),
+                                  menuItem("Corona virus in the Tunisia", icon = icon("dashboard"),
+                                           menuSubItem("Tunisia",tabName = "Corona4"),
+                                           menuSubItem("statistics",tabName = "corona5")), 
+                                  menuItem("in Tunisia", icon = icon("send",lib='glyphicon'),     
+                                           href = "https://www.salesforce.com")  )
+                ),
+                dashboardBody(tabItems(tabItem(tabName = "Corona2",fluidRow( box(flexdashboard::gaugeOutput("chart"),width=5,
+                                                                                 title="Percentage")
+                                                                             
+                                                                             
+                                                                             
+                )),
+                tabItem(tabName = "Corona4",fluidRow (  infoBoxOutput("Total"),
+                                                        infoBoxOutput("Recovred"),
+                                                        infoBoxOutput("Death")
+                                                        )
+                        ),
+                tabItem(tabName = "corona5",fluidRow(box(plotlyOutput("pie")),box(plotlyOutput("bar")),box(plotlyOutput("pie2")),box(plotOutput("bar2")))
+                )
+                
+                ) )
+                
+                
+  )
+)

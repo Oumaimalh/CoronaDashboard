@@ -1,0 +1,29 @@
+shinyServer(function(input,output){
+  output$value1 <- renderValueBox({
+    valueBox(
+      "Title",
+      input$count,
+      icon = icon("credit-card")
+    ) 
+  })
+  output$value2 <- renderValueBox({ 
+    valueBox(
+      "Title",
+      input$count,
+      icon = icon("credit-card")
+    ) 
+  })
+  output$value3 <- renderValueBox({
+    valueBox(
+      "Title",
+      input$count,
+      icon = icon("credit-card")
+    )})
+    world<-reactive({read.csv(file = "../Covoid/covid_19_data.csv",header=TRUE,sep=",") })
+    output$filedf <- DT::renderDataTable({ world()})
+  
+ 
+  
+  
+  
+})

@@ -1,0 +1,7 @@
+"0","data=subset(world,country_region==""Tunisia"")"
+"0",""
+"0","fig <- plot_ly(data, x = ~data[,2], y = ~data[,6], name = 'trace 0', type = 'scatter', mode = 'lines') "
+"0","fig <- fig %>% add_trace(y = ~data[,7], name = 'trace 1', mode = 'lines+markers') "
+"0","fig <- fig %>% add_trace(y = ~data[,8], name = 'trace 2', mode = 'markers')"
+"0",""
+"0","fig"

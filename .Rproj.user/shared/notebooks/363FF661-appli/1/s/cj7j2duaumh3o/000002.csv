@@ -1,0 +1,3 @@
+"0","world$Country.Region<-as.matrix(as.character(world$Country.Region))"
+"0","world$Country.Region[world$Country.Region=='Mainland China']<- 'China'"
+"0",""

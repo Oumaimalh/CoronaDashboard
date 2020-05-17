@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1586986218868.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "9A1E3C5F",
+    "lastKnownWriteTime" : 1523875570,
+    "last_content_update" : 1523875570,
+    "path" : "C:/Users/asus/Desktop/Projet ML/App-Credit/app.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "322,4",
+        "scrollLine" : "315"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 26,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

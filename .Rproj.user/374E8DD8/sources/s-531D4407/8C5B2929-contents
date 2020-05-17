@@ -1,0 +1,458 @@
+---
+title: "appli"
+author: "Oumaima Lahiani"
+date: "28/03/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+world=read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTlnogupswk1FW2T00LzzoPsx7e0BoYFgougFreXbFjfCxENGIA4txYnPZZpkGA2T80XcqC7j-A7fNC/pub?gid=791034843&single=true&output=csv",header = TRUE, sep= ";") 
+```
+
+
+```{r}
+library(readr)
+ library(dplyr)
+library(stringr)
+library(googlesheets)
+world=read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQb4cyDF4fmg_6S1wlaYg3FE26NAdIvEKbiw-fofQZioAqDmRRrbdMR_rHlmqqt8Ycp20KoOHpK_bAM/pub?gid=906510162&single=true&output=csv",header = TRUE, sep= ";") 
+names(world)[8] <- c('Recovered')
+world$Recovered=as.numeric(sub("\\..*", "", world$Recovered))
+ 
+df_confirmed= read.csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vTkkEOzG65PQYt264v-qjfK-CA5eMBvRgbfpZ1AqraX8U8woj_VtK-y2pt5lKrI-R8YT6ULB5wVWt23/pub?gid=1357658797&single=true&output=csv')
+
+
+```
+
+```{r}
+df_latong=merge(world,df_confirmed,by="Country.Region")[,c(1,3,6,10,11)]
+```
+
+```{r}
+world$Country.Region<-as.matrix(as.character(world$Country.Region))
+world$Country.Region[world$Country.Region=='Mainland China']<- 'China'
+
+```
+
+
+```{r}
+  
+  library(ggplot2)
+  library(gridExtra)
+  library(leaflet)
+  library(shiny)
+  library(shinydashboard)
+   
+  library(data.table)
+  library(dplyr)
+  library(tidyr)
+  library(scales)
+  library(forcats)
+  library(grid)
+ 
+
+```
+
+
+```{r}
+  names(world) <- tolower(names(world))
+  
+  names(world)[3:4] <- c('province_state', 'country_region')
+  
+  names(df_confirmed) <- tolower(names(df_confirmed))
+  
+  names(df_confirmed)[1:2] <- c('province_state', 'country_region')
+  
+  df_confirmed_province <- df_confirmed
+  
+  df_confirmed_country <- df_confirmed %>%
+    group_by(country_region) %>%
+    summarise(lat = mean(lat),
+              long = mean(long))
+  
+       
+       
+  
+  world <- world %>%
+    left_join(df_confirmed_country)
+  
+  world$date <- as.Date(world$observationdate, format = '%m/%d/%y')
+  
+  world <- world %>%
+    na.omit()
+ 
+```
+```{r}
+
+ for (i in 1:dim(world)[1]){
+    if(world[i,4]=='France'){
+      world[i,9]=46.2276
+      world[i,10]=2.2137
+    
+    }
+    if(world[i,4]=='China'){
+      world[i,9]=35.00
+      world[i,10]=105.00
+    
+    }
+  }
+  
+```
+
+```{r}
+   world_province <-  world
+  
+   world_country <-  world %>%
+    group_by(country_region, observationdate) %>%
+    summarise(confirmed = sum(confirmed),
+              deaths = sum(deaths),
+              recovered = sum(recovered))
+  
+   world_country$date <- as.Date( world_country$observationdate, format = '%m/%d/%y')
+  
+   world_country <-  world_country %>%
+    left_join(df_confirmed_country)
+```
+
+```{r}
+
+  df_stat_by_country <-  world_country %>%
+    filter(country_region != 'Others') %>%
+    group_by(country_region) %>%
+    summarise(cum_confirmed = max(confirmed),
+              cum_deaths = max(deaths),
+              cum_recovered = max(recovered)) %>%
+    mutate(death_rate = round(cum_deaths/(cum_confirmed + cum_recovered + cum_deaths), 3)) %>%
+    left_join( world_country %>%
+                select(country_region, lat, long)) %>%
+    unique() %>%
+    ungroup()
+  
+  df_stat_by_country$id <- seq(nrow(df_stat_by_country))   
+  
+  df_stat_by_country$mean_incre_confirmed <-  world_country %>%
+    filter(country_region != 'Others') %>%
+    group_by(country_region) %>%
+    summarise(mean_incre_confirmed = round((sort(confirmed, decreasing = T)[1] - sort(confirmed, decreasing = T)[4])/3, 1)) %>%
+    as.data.frame() %>%
+    select(mean_incre_confirmed) %>%
+    unlist()
+  
+  country_confirmed_plot <- df_stat_by_country %>%
+    arrange(-mean_incre_confirmed) %>%
+    head(10) %>%
+    ggplot(aes(reorder(country_region, mean_incre_confirmed), mean_incre_confirmed)) +
+    geom_bar(stat = 'identity', fill = 'orange', colour = 'orange', alpha = 0.75, size = 1) +
+    scale_y_continuous(label = comma) +
+    labs(x = '', y = '',
+         title = 'Recent Mean Increased \nNum. of Confirmed') +
+    coord_flip()
+  
+  country_death_rate_plot <- df_stat_by_country %>%
+    arrange(-death_rate) %>%
+    head(10) %>%
+    ggplot(aes(reorder(country_region, death_rate), death_rate)) +
+    geom_bar(stat = 'identity', fill = 'red', colour = 'red', alpha = 0.75, size = 1) +
+    scale_y_continuous(label = percent_format(accuracy = 1)) +
+    labs(x = '', y = '',
+         title = 'Death Rate') +
+    coord_flip()
+  
+  grid.arrange(country_confirmed_plot, country_death_rate_plot, ncol = 1)
+  
+```
+
+```{r}
+  
+  df_stat_by_province <- world_province %>%
+    filter(country_region != 'Others') %>%
+    group_by(country_region, province_state) %>%
+    summarise(cum_confirmed = max(confirmed),
+              cum_deaths = max(deaths),
+              cum_recovered = max(recovered)) %>%
+    mutate(death_rate = round(cum_deaths/(cum_confirmed + cum_recovered + cum_deaths), 3)) %>%
+    left_join(world %>%
+                select(country_region, province_state, lat, long)) %>%
+    unique() %>%
+    ungroup()
+  
+  df_stat_by_province$id <- seq(nrow(df_stat_by_province))    
+  
+  df_stat_by_province$mean_incre_confirmed <- world_province %>%
+    filter(country_region != 'Others') %>%
+    group_by(country_region, province_state) %>%
+    summarise(mean_incre_confirmed = round((sort(confirmed, decreasing = T)[1] - sort(confirmed, decreasing = T)[4])/3, 1)) %>%
+    as.data.frame() %>%
+    select(mean_incre_confirmed) %>%
+    unlist()
+  
+  province_confirmed_plot <- df_stat_by_province %>%
+    arrange(-mean_incre_confirmed) %>%
+    head(10) %>%
+    ggplot(aes(reorder(paste(country_region, '/', province_state), mean_incre_confirmed), mean_incre_confirmed)) +
+    geom_bar(stat = 'identity', fill = 'orange', colour = 'orange', alpha = 0.75, size = 1) +
+    scale_y_continuous(label = comma) +
+    labs(x = '', y = '',
+         title = 'Recent Mean Increased \nNum. of Confirmed') +
+    coord_flip()
+  
+  province_death_rate_plot <- df_stat_by_province %>%
+    arrange(-death_rate) %>%
+    head(10) %>%
+    ggplot(aes(reorder(paste(country_region, '/', province_state), death_rate), death_rate)) +
+    geom_bar(stat = 'identity', fill = 'red', colour = 'red', alpha = 0.75, size = 1) +
+    scale_y_continuous(label = percent_format(accuracy = 1)) +
+    labs(x = '', y = '',
+         title = 'Death Rate') +
+    coord_flip()
+  
+  grid.arrange(province_confirmed_plot, province_death_rate_plot, ncol = 1)
+  
+```
+
+
+```{r}
+palette <- colorBin('YlOrRd', domain = df_stat_by_country$cum_confirmed, bins = c(0, 50, 100, 500, 1000, 2500, Inf))
+        leaflet(data = df_stat_by_country) %>%
+          setView(lat = 35, lng = 102.5, zoom = 2.5) %>%
+          addProviderTiles(providers$Stamen.TonerLite) %>%
+          addCircleMarkers(lng = ~long, lat = ~lat, layerId = ~id,
+                           popup = ~paste0('<b>', 'nombre de cas confirmé pour : ',country_region, ':','</b>',cum_confirmed,'<br>','<b>', 'nombre de deces: ' , '</b>', cum_deaths, '<br>','<b>', 'nombre de personne retablis : ' , '</b>', cum_recovered, '<br>'),
+                           radius = ~sqrt(cum_confirmed)/10,
+                           color = ~palette(cum_confirmed)) %>%
+
+          addLegend(position = 'bottomright',
+                    pal <- palette,
+                    values = ~cum_confirmed,
+                    title = 'Num. of Confirmed',
+                    opacity = 0.75)
+  
+    
+  
+```
+
+
+```{r}
+
+        leaflet(data = df_stat_by_province) %>%
+          setView(lat = 35, lng = 102.5, zoom = 2.5) %>%
+          addProviderTiles(providers$Stamen.TonerLite) %>%
+          addCircleMarkers(lng = ~long, lat = ~lat, layerId = ~id,
+                           popup = ~paste0('<b>', 'Country/Region: ' , '</b>', country_region, '<br>',
+                                           '<b>', 'Province/State: ', '</b>', province_state, '<br>'),
+                           color = ~palette(cum_confirmed)) %>%
+          addLegend(position = 'bottomright',
+                    pal = palette,
+                    values = ~cum_confirmed,
+                    title = 'Num. of Confirmed',
+                    opacity = 0.75)
+  
+      
+```
+
+
+
+
+```{r}
+
+Tunisia=read.csv(file = "C:/Users/asus/Desktop/Covoid/Tunisia.csv",header=TRUE,sep=";") 
+
+```
+
+```{r}
+palette <- colorBin('YlOrRd', domain = Tunisia$confirme, bins = c(0, 10,20 ,30, 40, 50, Inf))
+        leaflet(data = Tunisia) %>%
+          setView(lat = 33, lng = 10, zoom = 5) %>%
+          addProviderTiles(providers$Stamen.TonerLite) %>%
+          addCircleMarkers(lng = ~long, lat = ~lat, layerId = ~id,
+                           popup = ~paste0('<b>', 'nombre de cas confirmé pour : ',gouv, ':','</b>',confirme,'<br>','<b>', 'nombre de deces: ' , '</b>', deces, '<br>','<b>', 'nombre de personne retablis : ' , '</b>', retablis, '<br>'),
+                           radius = ~sqrt(confirme)*2,
+                           color = ~palette(confirme)) %>%
+
+          addLegend(position = 'bottomright',
+                    pal <- palette,
+                    values = ~confirme,
+                    title = 'Num. of Confirmed',
+                    opacity = 0.75)
+```
+```{r}
+nom<-df_stat_by_country$country_region
+date<-world$date[1:length(nom)]
+for (i in 1:length(nom)){
+  for (j in 1:length(world$country_region)){
+    if( nom[i]== world$country_region[j]  ){
+     date[i]<- world$date[j] 
+    break 
+    }
+    
+  }}
+
+date
+
+```
+
+```{r}
+
+df4<-data.frame(nom,date)
+date_num<-vector("numeric",nrow(df4))
+for (i in 1:nrow(df4)){
+  date_num[i]<- time_length(interval(start = ymd(df4[i,2]), end = today()), unit = "days") 
+}
+
+df4<-data.frame(df4,date_num)
+```
+
+
+```{r}
+df4<-data.frame(df4,df_stat_by_country$cum_deaths)
+ratio<-vector("numeric",nrow(df4))
+ratio<-df_stat_by_country$cum_deaths/df4[,3]
+df4<-data.frame(df4,ratio)
+
+
+```
+
+
+```{r}
+df_1<-subset(df4,ratio>19)
+df_2<-subset(df4,ratio<19 & ratio>1)
+df_3<-subset(df4,ratio<1 & ratio>0.1)
+df_4<-subset(df4,ratio<0.1 & ratio != 0.0)
+```
+
+
+```{r}
+library(plotly)
+
+library(plotly)
+
+fig <- plot_ly(x = df_4$ratio, y =as.matrix(df_4$nom)[,1], type = 'bar', orientation = 'h',marker = list(color = 'tomato'))
+
+fig
+    
+```
+
+
+```{r}
+library(plotly)
+
+library(plotly)
+
+fig <- plot_ly(x = df_3$ratio, y =as.matrix(df_3$nom)[,1], type = 'bar', orientation = 'h',marker = list(color = 'orangered'))
+
+fig
+```
+
+
+```{r}
+library(plotly)
+
+fig <- plot_ly(x = df_2$ratio, y =as.matrix(df_2$nom)[,1], type = 'bar', orientation = 'h',marker = list(color = 'firebrick'))
+
+fig
+```
+
+```{r}
+library(plotly)
+
+fig <- plot_ly(x = df_1$ratio, y =as.matrix(df_1$nom)[,1], type = 'bar', orientation = 'h',marker = list(color = 'darkred'))
+
+fig
+```
+
+
+```{r}
+nom<-df_stat_by_country$country_region
+date<-nom
+  
+  for (j in 1:length(world$country_region)){
+    if( nom[1]==world$country_region[j]){
+        
+    boom<-world$date[j]
+    }
+    break
+  }
+date
+
+```
+```{r}
+data=subset(world,country_region=="Tunisia")
+
+fig <- plot_ly(data, x = ~data[,2], y = ~data[,6], name = 'trace 0', type = 'scatter', mode = 'lines') 
+fig <- fig %>% add_trace(y = ~data[,7], name = 'trace 1', mode = 'lines+markers') 
+fig <- fig %>% add_trace(y = ~data[,8], name = 'trace 2', mode = 'markers')
+
+fig
+```
+```{r}
+library(tidyverse)
+library(lubridate)
+
+ 
+df<-subset(world,Country.Region=="Tunisia")
+View(df)
+
+# Date format
+df$ObservationDate = dmy(df$ObservationDate) 
+head(df)
+
+# Filter on deaths
+df = df %>% filter(Confirmed > 50)
+
+# day number
+df$day = as.integer(row.names(df))
+df_degree = data.frame(n=NULL, aic=NULL)
+for(i in 1:10){
+  fit_tmp = lm(formula = Confirmed ~ day + I(day^i), data = df)
+  df_degree = bind_rows(df_degree,data.frame(n=i, aic=extractAIC(fit_tmp)[2]))
+}
+degree = df_degree$n[df_degree$aic == min(df_degree$aic)]
+
+cat("\n Degree selection :", degree)
+
+fit = lm(formula = Confirmed ~ day + I(day^degree), data = df)
+
+# prediction period (5 days)
+future = data.frame(day = c(1:(nrow(df)+5)))
+future_df = future # CI
+pred = predict(fit, newdata = future)
+
+# final dataframe
+future = cbind(left_join(future, df, by="day"),pred)
+
+# making final data
+future$date = NA
+date_debut = min(na.omit(future$ObservationDate)) - 1
+for(i in 1:nrow(future)){
+  future$date[i] = as.character(date_debut + i)
+}
+future$date = ymd(future$date)
+# Dataframe
+future = future %>% select(date,' Actual #Conf '= Confirmed, 'Prediction # Conf`=pred) %>% mutate(Prediction # Conf` = round(Prediction #Conf,0))
+print(future)
+
+future = future %>% pivot_longer(-date,names_to = "Conf", values_to = "Count")
+
+library(ggplot2)
+# Plot
+gg3 = ggplot(future, aes(x = date, y='Count', color = Confirmed)) + geom_line(size = 1.5, aes(linetype='Confirmed')) +
+  theme_minimal() + scale_x_date(breaks = "1 day",date_minor_breaks = '1 day',expand = c(0, 0) )+
+  theme(axis.text.x = element_text(angle = 90,size = 13),
+        axis.text.y = element_text(size = 15,face="bold"),
+        plot.title = element_text(size = 30, face = "bold")) +
+  geom_vline(xintercept = ymd("2020-03-16"), linetype="dashed", # Containement measures
+             color = "red")
+gg3
+
+pred_ci = predict(fit, newdata = future_df,interval = "prediction", level = 0.95)
+print(pred_ci)
+```
+```{r}
+
+```
+

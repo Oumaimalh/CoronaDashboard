@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1585494108535.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "87ADDE0D",
+    "lastKnownWriteTime" : 1556215277,
+    "last_content_update" : 1556215277,
+    "path" : "C:/Users/asus/Desktop/OUMAIMA/cours/atelier/ApplicationShiny/server.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "155,37",
+        "scrollLine" : "148"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 20,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

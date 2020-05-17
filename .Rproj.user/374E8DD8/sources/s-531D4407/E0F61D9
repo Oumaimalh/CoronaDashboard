@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1585765558613.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "E0F61D9",
+    "lastKnownWriteTime" : 21474896480,
+    "last_content_update" : 1585765558613,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "F9246900",
+        "caption" : "covid_sp",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=covid_sp&cache_key=F9246900",
+        "displayedObservations" : "35",
+        "environment" : "",
+        "expression" : "covid_sp",
+        "object" : "covid_sp",
+        "preview" : "0",
+        "totalObservations" : "35",
+        "variables" : "9"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

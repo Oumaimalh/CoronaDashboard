@@ -1,0 +1,178 @@
+
+library(ggplot2)
+library(gridExtra)
+library(leaflet)
+library(shiny)
+library(shinydashboard)
+
+library(data.table)
+library(dplyr)
+library(tidyr)
+library(scales)
+library(forcats)
+library(grid)
+library(flexdashboard)
+library(plotly)
+library(ggplot2)
+Tunisia <- read.csv("C:/Users/asus/Desktop/houcine/Tunisia.csv", sep=";")
+data <- read.csv("C:/Users/asus/Desktop/Covoid/Coronavirus2.csv", sep=";")
+
+
+
+shinyServer(function(input,output){
+  
+  world<-reactive({read.csv(file = "C:/Users/asus/Desktop/Covoid/covid_19_data.csv",header=TRUE,sep=";") })
+  output$filedf <- DT::renderDataTable({    df_stat_by_country()})
+  df_confirmed<-reactive({read.csv(file = "C:/Users/asus/Desktop/Covoid/time_series_covid_19_confirmed.csv") })
+  Tunisia<-reactive({read.csv(file = "C:/Users/asus/Desktop/houcine/Tunisia.csv") })
+  df_stat_by_country<-reactive({
+    world=world()
+    df_confirmed=df_confirmed()
+    names(world) <- tolower(names(world))
+    
+    names(world)[3:4] <- c('province_state', 'country_region')
+    
+    names(df_confirmed) <- tolower(names(df_confirmed))
+    
+    names(df_confirmed)[1:2] <- c('province_state', 'country_region')
+    
+    df_confirmed_province <- df_confirmed
+    
+    df_confirmed_country <- df_confirmed %>%
+      group_by(country_region) %>%
+      summarise(lat = mean(lat),
+                long = mean(long))
+    
+    
+    
+    
+    world <- world %>%
+      left_join(df_confirmed_country)
+    
+    world$date <- as.Date(world$observationdate, format = '%m/%d/%y')
+    
+    world <- world %>%
+      na.omit()
+    world_province <-  world
+    
+    world_country <-  world %>%
+      group_by(country_region, observationdate) %>%
+      summarise(confirmed = sum(confirmed),
+                deaths = sum(deaths),
+                recovered = sum(recovered))
+    
+    world_country$date <- as.Date( world_country$observationdate, format = '%m/%d/%y')
+    
+    world_country <-  world_country %>%
+      left_join(df_confirmed_country)
+    
+    df_stat_by_country <-  world_country %>%
+      filter(country_region != 'Others') %>%
+      group_by(country_region) %>%
+      summarise(cum_confirmed = max(confirmed),
+                cum_deaths = max(deaths),
+                cum_recovered = max(recovered)) %>%
+      mutate(death_rate = round(cum_deaths/(cum_confirmed + cum_recovered + cum_deaths), 3)) %>%
+      left_join( world_country %>%
+                   select(country_region, lat, long)) %>%
+      unique() %>%
+      ungroup()
+    
+    df_stat_by_country$id <- seq(nrow(df_stat_by_country))   
+    
+    df_stat_by_country$mean_incre_confirmed <-  world_country %>%
+      filter(country_region != 'Others') %>%
+      group_by(country_region) %>%
+      summarise(mean_incre_confirmed = round((sort(confirmed, decreasing = T)[1] - sort(confirmed, decreasing = T)[4])/3, 1)) %>%
+      as.data.frame() %>%
+      select(mean_incre_confirmed) %>%
+      unlist()
+    df_stat_by_country
+  })
+  
+  confirmed<-reactive({df_stat_by_country<- df_stat_by_country()
+  
+  somme<-sum( df_stat_by_country$cum_confirmed)
+  somme}) 
+  
+  output$value1 <- renderValueBox({
+    confirmed<-confirmed()
+    valueBox(
+      paste0(confirmed), "Total confirmed cases 03/29/2020",icon("stats",lib='glyphicon'),
+      color = "purple")
+  })
+  output$chart <- flexdashboard::renderGauge({
+    confirmed<-confirmed()
+    df_stat_by_country<- df_stat_by_country()
+    
+    recoverd<-sum( df_stat_by_country$cum_recovered)
+    
+    flexdashboard::gauge(recoverd, min = 0, max = confirmed)
+  })
+  output$chart2 <- flexdashboard::renderGauge({
+    confirmed<-confirmed()
+    df_stat_by_country<- df_stat_by_country()
+    
+    deaths<-sum( df_stat_by_country$cum_deaths)
+    
+    flexdashboard::gauge(deaths, min = 0, max = confirmed, symbol = 'K')
+  })
+
+
+
+  output$Total <- renderInfoBox({
+    infoBox(
+      "Total", paste0(279),
+      color = "green"
+    )
+  })
+  output$Recovred <- renderInfoBox({
+    infoBox(
+      "Recovred", paste0(1),
+      color = "green"
+    )
+  })
+  output$Death <- renderInfoBox({
+    infoBox(
+      "Death", paste0(8),
+      color = "green"
+    )
+  })
+  output$pie <- renderPlotly({
+    
+    
+    p <- plot_ly( data, labels = ~return_from , values = ~case, type = 'pie') %>%
+      layout(title = 'Pourcentage des cas par pays ',
+             xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+             yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+    p})
+  output$bar<- renderPlotly({
+    z<-plot_ly(data,x=~confirmation_date,y=~case, type='bar')%>%
+      layout(title ='Nombre des cas confirmés',
+             yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+    z
+    
+    
+   })
+  output$pie2 <- renderPlotly({
+    
+    p2 <- plot_ly( data, labels = ~city , values = ~case, type = 'pie') %>%
+      layout(title = 'Pourcentage des cas en tunisie par région',
+             xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+             yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+    p2
+    
+    
+  })
+  output$bar2<- renderPlot({
+   p<- ggplot(data=data, aes(x=city, y=case, fill=gender)) +
+      geom_bar(stat="identity", position=position_dodge())
+   p + coord_flip()
+    
+  })
+  
+  
+  
+  
+  
+})

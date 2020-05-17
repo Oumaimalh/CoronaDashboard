@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1585665097793.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "CE74C3EE",
+    "lastKnownWriteTime" : 1586900642,
+    "last_content_update" : 1586900642679,
+    "path" : "C:/Users/asus/Desktop/Atelier1/Corona/ui.R",
+    "project_path" : "ui.R",
+    "properties" : {
+        "cursorPosition" : "75,41",
+        "scrollLine" : "68"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

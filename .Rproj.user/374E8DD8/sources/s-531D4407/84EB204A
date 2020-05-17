@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1585665096698.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "84EB204A",
+    "lastKnownWriteTime" : 1586906365,
+    "last_content_update" : 1586906365394,
+    "path" : "C:/Users/asus/Desktop/Atelier1/Corona/server.R",
+    "project_path" : "server.R",
+    "properties" : {
+        "cursorPosition" : "362,89",
+        "scrollLine" : "357",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

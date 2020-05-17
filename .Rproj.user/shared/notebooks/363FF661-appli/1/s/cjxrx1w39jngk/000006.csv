@@ -1,0 +1,4 @@
+"0","df_1<-subset(df4,ratio>19)"
+"0","df_2<-subset(df4,ratio<19 & ratio>1)"
+"0","df_3<-subset(df4,ratio<1 & ratio>0.1)"
+"0","df_4<-subset(df4,ratio<0.1 & ratio != 0.0)"

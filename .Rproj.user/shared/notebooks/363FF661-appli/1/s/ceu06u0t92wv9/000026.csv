@@ -1,0 +1,7 @@
+"0","library(plotly)"
+"0",""
+"0","library(plotly)"
+"0",""
+"0","fig <- plot_ly(x = df_3$ratio, y =as.matrix(df_3$nom)[,1], type = 'bar', orientation = 'h',marker = list(color = 'orangered'))"
+"0",""
+"0","fig"

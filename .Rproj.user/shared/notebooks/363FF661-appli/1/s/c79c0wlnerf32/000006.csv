@@ -1,0 +1,6 @@
+"0","df4<-data.frame(df4,df_stat_by_country$cum_deaths)"
+"0","ratio<-vector(""numeric"",nrow(df4))"
+"0","ratio<-df_stat_by_country$cum_deaths/df4[,3]"
+"0","df4<-data.frame(df4,ratio)"
+"0",""
+"0",""

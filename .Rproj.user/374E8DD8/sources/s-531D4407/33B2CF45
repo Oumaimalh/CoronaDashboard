@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1585597874177.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2322003428",
+    "id" : "33B2CF45",
+    "lastKnownWriteTime" : 1586903077,
+    "last_content_update" : 1586903077860,
+    "path" : "C:/Users/asus/Desktop/predict.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "53,184",
+        "scrollLine" : "39",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

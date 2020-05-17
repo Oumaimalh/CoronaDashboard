@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1585496479567.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "517E5B86",
+    "lastKnownWriteTime" : 1585495824,
+    "last_content_update" : 1585496479567,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "65F7B5D9",
+        "caption" : "Tunisia",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=Tunisia&cache_key=65F7B5D9",
+        "displayedObservations" : "23",
+        "environment" : "",
+        "expression" : "Tunisia",
+        "object" : "Tunisia",
+        "preview" : "0",
+        "totalObservations" : "23",
+        "variables" : "7"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 21,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}
